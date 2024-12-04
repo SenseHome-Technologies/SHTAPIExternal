@@ -1,0 +1,7 @@
+{
+    "name": "SenseHome-Technologies API External",
+    "version": "1.0.0",
+    "description": "The purpose of the API developed is to manage the external of a system, including notificaitons and openweather management functions.",
+    "title": "SenseHome-Technologies API External",
+    "url": "http://192.168.1.11:3000"
+}  

@@ -5,7 +5,7 @@ const router = require('express').Router();
 
 
 /**
- * @api {post} /weather/currentWeather Get Current Weather
+ * @api {post} /api/weather/currentWeather Get Current Weather
  * @apiName GetCurrentWeather
  * @apiGroup Weather
  * 
