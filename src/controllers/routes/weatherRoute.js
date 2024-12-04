@@ -3,33 +3,31 @@ const { currentWeather } = require('../../usecases/weather/weatherInteractorOpen
 const { currentWeatherPersistence } = require('../../usecases/weather/currentWeatherPersistence');
 const router = require('express').Router();
 
+
 /**
- * @api {post} /weather/currentWeather Current weather
- * @apiName CurrentWeather
+ * @api {post} /weather/currentWeather Get Current Weather
+ * @apiName GetCurrentWeather
  * @apiGroup Weather
- * @apiParam {String} latitude coordinate
- * @apiParam {String} longitude coordinate
- * @apiSuccess {String} message Weather values obtained successfully
- * @apiSuccess {String} token JWT token for the user
- * @apiError {String} message Latitude or longitude are missing
- * @apiError {String} message Not authorized based in credentials
- * @apiError {String} message Coordinates not found
+ * 
+ * @apiParam {Number} latitude Latitude of the location.
+ * @apiParam {Number} longitude Longitude of the location.
+ * @apiParam {String} [exclude] Data to exclude from the weather response.
+ * 
+ * @apiSuccess {Number} status Response status code.
+ * @apiSuccess {Object} token Weather data.
+ * 
+ * @apiError {Number} status Error status code.
+ * @apiError {String} message Error message.
  */
 router.route('/weather/currentWeather').post(
-    // Define an asynchronous function to handle the weather route
     async (req, res) => {
-        // Extract latitude and longitude from the request body
         const {latitude, longitude, exclude} = req.body;
 
         try {
-            // Use weatherInteractorOpenWeather to attempt to get current weather with the provided latitude, longitude and exclude
             const weather = await currentWeather({currentWeatherPersistence}, {latitude, longitude, exclude});
-            // Send the response with the status and weather data
             res.status(weather.status).send(weather);
         } catch (err) {
-            // Log any errors that occur during the weather process
             console.log(err);
-            // Rethrow the error to be handled by the caller
             throw err;
         }
     }
