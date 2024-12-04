@@ -7,7 +7,7 @@ exports.currentWeather = async ({currentWeatherPersistence}, {latitude, longitud
         // Create a new WeatherEntity with provided latitude, longitude and exclude
         const weather = new WeatherEntity({latitude, longitude, exclude});
 
-        // Validate the user
+        // Validate the latitude and longitude values
         if (!(weather.latitude && weather.longitude)) {
             return { status: 400, message: 'Latitude or longitude are missing' };
         }
