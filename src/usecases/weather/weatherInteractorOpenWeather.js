@@ -2,10 +2,10 @@
 
 const {WeatherEntity} = require('../../entities/WeatherEntity');
 
-exports.currentWeather = async ({currentWeatherPersistence}, {latitude, longitude, exclude}) => {
+exports.currentWeather = async ({currentWeatherPersistence}, {latitude, longitude}) => {
     try {
         // Create a new WeatherEntity with provided latitude, longitude and exclude
-        const weather = new WeatherEntity({latitude, longitude, exclude});
+        const weather = new WeatherEntity({latitude, longitude});
 
         // Validate the latitude and longitude values
         if (!(weather.latitude && weather.longitude)) {

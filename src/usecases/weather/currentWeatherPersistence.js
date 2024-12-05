@@ -1,4 +1,7 @@
+'use strict'
+
 const axios = require('axios');
+// require('dotenv').config();
 
 exports.currentWeatherPersistence = async (weather) => {
     try {
@@ -11,13 +14,11 @@ exports.currentWeatherPersistence = async (weather) => {
             lang: 'en',
         };
 
-        // If exclude variable isn't null include it in the parameters
-        if (weather.exclude) {
-            params.exclude = weather.exclude;
-        }
+        // Base Url for OpenWeather API
+        const url = "https://api.openweathermap.org/data/2.5/weather";
 
         // Make the request to OpenWeather API
-        const response = await axios.get("https://api.openweathermap.org/data/3.0/onecall", { params });
+        const response = await axios.get(url, {params});
 
         // Treat message errors from Open Weather API
         switch (response.status) {

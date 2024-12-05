@@ -3,7 +3,7 @@ exports.WeatherEntity = class WeatherEntity {
         this.appId = weather.appId;
         this.latitude = weather.latitude;
         this.longitude = weather.longitude;
-        this.exclude = weather.exclude;
+        this.mode = weather.mode;
         this.units = weather.units;
         this.language = weather.language;
     }
