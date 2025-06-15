@@ -1,1 +1,467 @@
-{"swagger":"2.0","info":{"title":"SenseHome-Technologies API External","version":"1.0.0","description":"The purpose of the API developed is to manage the external of a system, including notificaitons and openweather management functions."},"paths":{"/api/weather/currentWeather":{"post":{"tags":["Weather"],"summary":"Retrieve current weather information based on latitude and longitude.","consumes":["application/json"],"produces":["application/json"],"parameters":[{"in":"body","name":"body","description":"Retrieve current weather information based on latitude and longitude.","required":true,"schema":{"$ref":"#/definitions/GetCurrentWeather"}}],"responses":{"200":{"description":"successful operation","schema":{"type":"Number","items":{"$ref":"#/definitions/GetCurrentWeather"}}}}}}},"definitions":{"GetCurrentWeather":{"properties":{"latitude":{"type":"number","description":"Latitude of the location."},"longitude":{"type":"number","description":"Longitude of the location."},"status":{"type":"number","description":"Response status code."},"data":{"type":"object","description":"Weather data.","$ref":"#/definitions/data"}},"required":["status","data"]}}}
+{
+    "openapi": "3.0.3",
+    "info": {
+        "title": "SenseHome-Technologies API External",
+        "version": "1.0.0",
+        "description": "The purpose of the API developed is to manage the external of a system, including notifications and OpenWeather management functions.",
+        "contact": {
+            "name": "SenseHome Technologies",
+            "url": "http://192.168.1.11:3000"
+        }
+    },
+    "servers": [
+        {
+            "url": "http://192.168.1.11:3000",
+            "description": "Development server"
+        },
+        {
+            "url": "http://localhost:3000",
+            "description": "Local development server"
+        }
+    ],
+    "paths": {
+        "/api/weather/currentWeather": {
+            "post": {
+                "tags": [
+                    "Weather"
+                ],
+                "summary": "Get Current Weather",
+                "description": "Retrieve current weather information based on latitude and longitude coordinates using the OpenWeather API.",
+                "operationId": "getCurrentWeather",
+                "requestBody": {
+                    "description": "Location coordinates for weather data retrieval",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/WeatherRequest"
+                            },
+                            "examples": {
+                                "lisbon": {
+                                    "summary": "Weather for Lisbon, Portugal",
+                                    "value": {
+                                        "latitude": 38.7223,
+                                        "longitude": -9.1393
+                                    }
+                                },
+                                "london": {
+                                    "summary": "Weather for London, UK",
+                                    "value": {
+                                        "latitude": 51.5074,
+                                        "longitude": -0.1278
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Weather data retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/WeatherSuccessResponse"
+                                },
+                                "examples": {
+                                    "success": {
+                                        "summary": "Successful weather response",
+                                        "value": {
+                                            "status": 200,
+                                            "message": "Weather values obtained successfully",
+                                            "data": {
+                                                "coord": {
+                                                    "lon": -9.1393,
+                                                    "lat": 38.7223
+                                                },
+                                                "weather": [
+                                                    {
+                                                        "id": 800,
+                                                        "main": "Clear",
+                                                        "description": "clear sky",
+                                                        "icon": "01d"
+                                                    }
+                                                ],
+                                                "base": "stations",
+                                                "main": {
+                                                    "temp": 22.5,
+                                                    "feels_like": 22.3,
+                                                    "temp_min": 20.1,
+                                                    "temp_max": 24.8,
+                                                    "pressure": 1013,
+                                                    "humidity": 65
+                                                },
+                                                "visibility": 10000,
+                                                "wind": {
+                                                    "speed": 3.6,
+                                                    "deg": 230
+                                                },
+                                                "clouds": {
+                                                    "all": 0
+                                                },
+                                                "dt": 1733550000,
+                                                "sys": {
+                                                    "type": 2,
+                                                    "id": 2038029,
+                                                    "country": "PT",
+                                                    "sunrise": 1733470800,
+                                                    "sunset": 1733505600
+                                                },
+                                                "timezone": 0,
+                                                "id": 2267057,
+                                                "name": "Lisbon",
+                                                "cod": 200
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request - Invalid coordinates or missing parameters",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "missing_coordinates": {
+                                        "summary": "Missing latitude or longitude",
+                                        "value": {
+                                            "status": 400,
+                                            "message": "Latitude or longitude are missing"
+                                        }
+                                    },
+                                    "invalid_credentials": {
+                                        "summary": "Invalid API credentials",
+                                        "value": {
+                                            "status": 400,
+                                            "message": "Not authorized based in credentials"
+                                        }
+                                    },
+                                    "coordinates_not_found": {
+                                        "summary": "Coordinates not found",
+                                        "value": {
+                                            "status": 400,
+                                            "message": "Coordinates not found"
+                                        }
+                                    },
+                                    "rate_limit_exceeded": {
+                                        "summary": "API rate limit exceeded",
+                                        "value": {
+                                            "status": 400,
+                                            "message": "Exceeded the number of calls permitted to Open Weather API"
+                                        }
+                                    },
+                                    "service_error": {
+                                        "summary": "External service error",
+                                        "value": {
+                                            "status": 400,
+                                            "message": "Something went wrong with the request"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "server_error": {
+                                        "summary": "Internal server error",
+                                        "value": {
+                                            "status": 500,
+                                            "message": "Internal server error occurred"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "WeatherRequest": {
+                "type": "object",
+                "required": [
+                    "latitude",
+                    "longitude"
+                ],
+                "properties": {
+                    "latitude": {
+                        "type": "number",
+                        "format": "double",
+                        "description": "Latitude of the location in decimal degrees",
+                        "minimum": -90,
+                        "maximum": 90,
+                        "example": 38.7223
+                    },
+                    "longitude": {
+                        "type": "number",
+                        "format": "double",
+                        "description": "Longitude of the location in decimal degrees",
+                        "minimum": -180,
+                        "maximum": 180,
+                        "example": -9.1393
+                    }
+                }
+            },
+            "WeatherSuccessResponse": {
+                "type": "object",
+                "required": [
+                    "status",
+                    "message",
+                    "data"
+                ],
+                "properties": {
+                    "status": {
+                        "type": "integer",
+                        "description": "HTTP status code",
+                        "example": 200
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "Success message",
+                        "example": "Weather values obtained successfully"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/OpenWeatherData"
+                    }
+                }
+            },
+            "ErrorResponse": {
+                "type": "object",
+                "required": [
+                    "status",
+                    "message"
+                ],
+                "properties": {
+                    "status": {
+                        "type": "integer",
+                        "description": "HTTP status code",
+                        "example": 400
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "Error message describing what went wrong",
+                        "example": "Latitude or longitude are missing"
+                    }
+                }
+            },
+            "OpenWeatherData": {
+                "type": "object",
+                "description": "Weather data from OpenWeather API",
+                "properties": {
+                    "coord": {
+                        "$ref": "#/components/schemas/Coordinates"
+                    },
+                    "weather": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Weather"
+                        }
+                    },
+                    "base": {
+                        "type": "string",
+                        "description": "Internal parameter",
+                        "example": "stations"
+                    },
+                    "main": {
+                        "$ref": "#/components/schemas/MainWeatherData"
+                    },
+                    "visibility": {
+                        "type": "integer",
+                        "description": "Visibility in meters",
+                        "example": 10000
+                    },
+                    "wind": {
+                        "$ref": "#/components/schemas/Wind"
+                    },
+                    "clouds": {
+                        "$ref": "#/components/schemas/Clouds"
+                    },
+                    "dt": {
+                        "type": "integer",
+                        "description": "Time of data calculation, unix timestamp",
+                        "example": 1733550000
+                    },
+                    "sys": {
+                        "$ref": "#/components/schemas/SystemData"
+                    },
+                    "timezone": {
+                        "type": "integer",
+                        "description": "Shift in seconds from UTC",
+                        "example": 0
+                    },
+                    "id": {
+                        "type": "integer",
+                        "description": "City ID",
+                        "example": 2267057
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "City name",
+                        "example": "Lisbon"
+                    },
+                    "cod": {
+                        "type": "integer",
+                        "description": "Internal parameter",
+                        "example": 200
+                    }
+                }
+            },
+            "Coordinates": {
+                "type": "object",
+                "properties": {
+                    "lon": {
+                        "type": "number",
+                        "format": "double",
+                        "description": "Longitude",
+                        "example": -9.1393
+                    },
+                    "lat": {
+                        "type": "number",
+                        "format": "double",
+                        "description": "Latitude",
+                        "example": 38.7223
+                    }
+                }
+            },
+            "Weather": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "description": "Weather condition id",
+                        "example": 800
+                    },
+                    "main": {
+                        "type": "string",
+                        "description": "Group of weather parameters",
+                        "example": "Clear"
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "Weather condition within the group",
+                        "example": "clear sky"
+                    },
+                    "icon": {
+                        "type": "string",
+                        "description": "Weather icon id",
+                        "example": "01d"
+                    }
+                }
+            },
+            "MainWeatherData": {
+                "type": "object",
+                "properties": {
+                    "temp": {
+                        "type": "number",
+                        "format": "double",
+                        "description": "Temperature in Celsius",
+                        "example": 22.5
+                    },
+                    "feels_like": {
+                        "type": "number",
+                        "format": "double",
+                        "description": "Temperature accounting for human perception in Celsius",
+                        "example": 22.3
+                    },
+                    "temp_min": {
+                        "type": "number",
+                        "format": "double",
+                        "description": "Minimum temperature in Celsius",
+                        "example": 20.1
+                    },
+                    "temp_max": {
+                        "type": "number",
+                        "format": "double",
+                        "description": "Maximum temperature in Celsius",
+                        "example": 24.8
+                    },
+                    "pressure": {
+                        "type": "integer",
+                        "description": "Atmospheric pressure in hPa",
+                        "example": 1013
+                    },
+                    "humidity": {
+                        "type": "integer",
+                        "description": "Humidity percentage",
+                        "example": 65
+                    }
+                }
+            },
+            "Wind": {
+                "type": "object",
+                "properties": {
+                    "speed": {
+                        "type": "number",
+                        "format": "double",
+                        "description": "Wind speed in meter/sec",
+                        "example": 3.6
+                    },
+                    "deg": {
+                        "type": "integer",
+                        "description": "Wind direction in degrees",
+                        "example": 230
+                    }
+                }
+            },
+            "Clouds": {
+                "type": "object",
+                "properties": {
+                    "all": {
+                        "type": "integer",
+                        "description": "Cloudiness percentage",
+                        "example": 0
+                    }
+                }
+            },
+            "SystemData": {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "type": "integer",
+                        "description": "Internal parameter",
+                        "example": 2
+                    },
+                    "id": {
+                        "type": "integer",
+                        "description": "Internal parameter",
+                        "example": 2038029
+                    },
+                    "country": {
+                        "type": "string",
+                        "description": "Country code",
+                        "example": "PT"
+                    },
+                    "sunrise": {
+                        "type": "integer",
+                        "description": "Sunrise time, unix timestamp",
+                        "example": 1733470800
+                    },
+                    "sunset": {
+                        "type": "integer",
+                        "description": "Sunset time, unix timestamp",
+                        "example": 1733505600
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Weather",
+            "description": "Weather-related operations using OpenWeather API"
+        }
+    ]
+}
